@@ -8,3 +8,27 @@ node_modules/
 
 # .env ファイルを無視
 .env
+
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/weather_front/node_modules
+/weather_front/.pnp
+/weather_front/.pnp.js
+
+# testing
+/weather_front/coverage
+
+# production
+/weather_front/build
+
+# misc
+/weather_front/.DS_Store
+/weather_front/.env.local
+/weather_front/.env.development.local
+/weather_front/.env.test.local
+/weather_front/.env.production.local
+
+/weather_front/npm-debug.log*
+/weather_front/yarn-debug.log*
+/weather_front/yarn-error.log*
