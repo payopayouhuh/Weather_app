@@ -2,10 +2,28 @@
 <html>
 <head>
     <title>Weather App</title>
+
     <script type="text/javascript">
         function setCoordinates(lat, lon) {
             document.getElementById('latitude').value = lat;
             document.getElementById('longitude').value = lon;
+        }
+    
+        function buildDateTime(year, month, day) {
+            return `${year}-${month}${day}T00Z`;
+        }
+    
+        function getWeather() {
+            const startY = document.getElementById("startYear").value;
+            const startM = document.getElementById("startMonth").value;
+            const startD = document.getElementById("startDay").value;
+            const endY = document.getElementById("endYear").value;
+            const endM = document.getElementById("endMonth").value;
+            const endD = document.getElementById("endDay").value;
+    
+            document.getElementById("startDateTime").value = buildDateTime(startY, startM, startD);
+            document.getElementById("endDateTime").value = buildDateTime(endY, endM, endD);
+            return true;
         }
     </script>
 </head>
@@ -18,13 +36,15 @@
     <button type="button" onclick="setCoordinates('35.6895', '139.6917')">東京</button>
     <button type="button" onclick="setCoordinates('34.6937', '135.5023')">大阪</button>
     <button type="button" onclick="setCoordinates('35.1815', '136.9066')">名古屋</button>
-    <button type="button" onclick="setCoordinates('', '')">選択しない</button>
     <br><br>
 
-    Latitude: <input type="text" id="latitude" name="latitude"><br>
-    Longitude: <input type="text" id="longitude" name="longitude"><br>
-    Start Time (e.g., 2020-05-01T00Z): <input type="text" name="startDateTime"><br>
-    End Time (e.g., 2020-10-01T00Z): <input type="text" name="endDateTime"><br>
+
+    Latitude: <input type="text" id="latitude" name="latitude" value="35.6895"><br>
+    Longitude: <input type="text" id="longitude" name="longitude" value="139.6917"><br>
+    Start Date (e.g., 2020-05-01): <input type="text" name="startDate" value="2020-05-01"><br>
+    Start Time (e.g., 00:00): <input type="text" name="startTime" value="00:00"><br>
+    End Date (e.g., 2020-10-01): <input type="text" name="endDate" value="2020-10-01"><br>
+    End Time (e.g., 00:00): <input type="text" name="endTime" value="00:00"><br>
     <input type="submit" value="Get Weather">
 </form>
 
@@ -33,6 +53,10 @@
     <pre>
     {{ weather_data | tojson | safe }}
     </pre>
+{% endif %}
+{% if csv_data %}
+    <h2>Download Data:</h2>
+    <a href="/download_csv">Download CSV</a>
 {% endif %}
 
 </body>
