@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Weather App</title>
+</head>
+<body>
+
+<h1>Enter Latitude, Longitude, Start and End Time</h1>
+
+<form method="post" action="/">
+    Latitude: <input type="text" name="latitude"><br>
+    Longitude: <input type="text" name="longitude"><br>
+    Start Time (e.g., 2020-05-01T00Z): <input type="text" name="startDateTime"><br>
+    End Time (e.g., 2020-10-01T00Z): <input type="text" name="endDateTime"><br>
+    <input type="submit" value="Get Weather">
+</form>
+
+<h1>Weather Data:</h1>
+{% if weather_data %}
+    <pre>
+    {{ weather_data | tojson | safe }}
+    </pre>
+{% endif %}
+
+</body>
+</html>
