@@ -5,6 +5,10 @@ import io
 from flask import jsonify
 from pytz import timezone
 from datetime import datetime
+from data_aggregator import aggregate_data
+from plot_multiple_chart import plot_multiple
+from flask import Flask, send_file
+
 
 
 app = Flask(__name__)
@@ -55,6 +59,8 @@ def api_weather():
             endDateTime = f"{endDate}T{endTime}Z"
             open_hour = data['open_hour']
             close_hour = data['close_hour']
+            time_unit = data['time_unit']
+
 
             api_url = f"https://api.weather.com/v3/wx/hod/r1/direct?geocode={latitude},{longitude}&startDateTime={startDateTime}&endDateTime={endDateTime}&format=json&units=m&apiKey=7698370dea91420198370dea91720199"
             response = requests.get(api_url)
@@ -62,6 +68,15 @@ def api_weather():
             if response.status_code == 200:
                 weather_data = response.json()
                 weather_data = filter_data_by_hours(weather_data, open_hour, close_hour)
+
+
+                num_cols = data.get('num_cols', [])
+                non_num_cols = data.get('non_num_cols', [])
+
+                weather_data = json.loads(aggregate_data(weather_data, time_unit, num_cols, non_num_cols))
+
+                plot_multiple(weather_data, image_path='./images/plot1.png')
+
                 df = pd.DataFrame.from_dict(weather_data)
                 csv_data = df.to_csv(index=False)  # csv_data を更新
             else:
@@ -87,6 +102,13 @@ def download_csv():
         )
     else:
         return "No data available for download"
+    
+@app.route('/get_image')
+def get_image():
+    try:
+        return send_file('./images/plot1.png', mimetype='image/png')
+    except FileNotFoundError:
+        return "グラフ表示するファイルがまだありません", 404
 
 if __name__ == '__main__':
     app.run(debug=True)
