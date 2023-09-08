@@ -1,9 +1,8 @@
-// 以下のコードは ChartComponent.js に関する部分です
 import React from 'react';
 import { Line } from 'react-chartjs-2';
 
 const ChartComponent = ({ data, selectedNumCols }) => {
-  const labels = data.labels || []; // あなたのデータに応じて調整してください
+  const labels = data.labels || [];
 
   const generateDatasets = () => {
     if (!data || !selectedNumCols) return [];

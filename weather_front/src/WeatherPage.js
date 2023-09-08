@@ -3,8 +3,11 @@ import axios from 'axios';
 import ChartComponent from './ChartComponent';
 import './App.css';
 
-const serverUrl = process.env.REACT_APP_SERVER_URL || 'http://localhost:5000';
-<img src={`${serverUrl}/get_image`} alt="Generated Plot" />
+// const serverUrl = process.env.REACT_APP_SERVER_URL || 'http://localhost:5000';
+//const serverUrl = 'http://flask_app:5000';
+const serverUrl = 'http://127.0.0.1:5000';
+//http://127.0.0.1:5000
+
 
 
 function WeatherPage() {
@@ -17,9 +20,55 @@ function WeatherPage() {
   const [selectedNonNumCols, setSelectedNonNumCols] = useState([]);
   const [timestamp, setTimestamp] = useState(Date.now());
 
+  const [prefecture, setPrefecture] = useState("");
+  const [area, setArea] = useState("");
+  const areaData = {
+    "宮城県": ["仙台"],
+    "東京都": ["東京23区東", "東京23区西", "都下東", "都下西"],
+    "千葉県": ["南房総"],
+    "神奈川県": ["横浜", "川崎"],
+    "愛知県": ["名古屋"],
+    "京都府": ["京都"],
+    "大阪府": ["大阪", "東大阪"],
+    "兵庫県": ["神戸"],
+    "福岡県": ["福岡"]
+  };
+  
+  const coordinateData = {
+    "仙台": { latitude: '38.2682', longitude: '140.8694' },
+    "東京23区東": { latitude: '35.6895', longitude: '139.6917' },
+    "東京23区西": { latitude: '35.6895', longitude: '139.6917' },
+    "都下東": { latitude: '35.6895', longitude: '139.6917' },
+    "都下西": { latitude: '35.6895', longitude: '139.6917' },
+    "南房総": { latitude: '34.9833', longitude: '139.8667' },
+    "横浜": { latitude: '35.4437', longitude: '139.6380' },
+    "川崎": { latitude: '35.5300', longitude: '139.7030' },
+    "名古屋": { latitude: '35.1815', longitude: '136.9066' },
+    "京都": { latitude: '35.0116', longitude: '135.7681' },
+    "大阪": { latitude: '34.6937', longitude: '135.5023' },
+    "東大阪": { latitude: '34.6937', longitude: '135.5023' },
+    "神戸": { latitude: '34.6901', longitude: '135.1955' },
+    "福岡": { latitude: '33.5904', longitude: '130.4017' }
+  };
+  
+
+  const handlePrefectureChange = (e) => {
+    setPrefecture(e.target.value);
+    setArea(""); 
+  };
+  const handleAreaChange = (e) => {
+    setArea(e.target.value);
+    const newCoordinates = coordinateData[e.target.value];
+    if (newCoordinates) {
+      setCoordinates(newCoordinates);
+    }
+  };
+  
 
   const fetchData = async () => {
-    const api_url = "http://localhost:5000/api/weather";
+    //const api_url = "http://localhost:5000/api/weather";
+    const api_url = `${serverUrl}/api/weather`;
+    //'http://flask_app:5000'
 
     const data = {
       latitude: coordinates.latitude,
@@ -73,21 +122,38 @@ function WeatherPage() {
   return (
     <div className="container">
       <h4 className="title">取得する位置,期間,営業時間を指定</h4>
-      <div className="button-group">
-      <button className="city-button" onClick={() => setCoordinates({ latitude: '35.6895', longitude: '139.6917' })}>東京</button>
-      <button className="city-button" onClick={() => setCoordinates({ latitude: '34.6937', longitude: '135.5023' })}>大阪</button>
-      <button className="city-button" onClick={() => setCoordinates({ latitude: '35.1815', longitude: '136.9066' })}>名古屋</button>
-    </div>
+
+      <label>
+      <h5  style={{fontWeight: 'bold'}}>都道府県</h5>
+        <select value={prefecture} onChange={handlePrefectureChange}>
+          <option value="" disabled>選択してください</option>
+          {Object.keys(areaData).map((pref, index) => (
+            <option key={index} value={pref}>{pref}</option>
+          ))}
+        </select>
+      </label>
+
+      {prefecture && (
+        <label>
+          <h5  style={{fontWeight: 'bold'}}>エリア</h5>
+          <select value={area} onChange={handleAreaChange}>
+            <option value="" disabled>選択してください</option>
+            {areaData[prefecture].map((areaName, index) => (
+              <option key={index} value={areaName}>{areaName}</option>
+            ))}
+          </select>
+        </label>
+      )}
 
     <form className="form">
       <label className="form-label">
         取得開始日: <input className="form-input" type="text" value={dateRange.startDate} onChange={(e) => updateTime('startDate', e.target.value)} />
       </label>
       <label className="form-label">
-        取得終了日: <input className="form-input" type="text" value={dateRange.startTime} onChange={(e) => updateTime('startTime', e.target.value)} />
+        取得開始時間: <input className="form-input" type="text" value={dateRange.startTime} onChange={(e) => updateTime('startTime', e.target.value)} />
       </label>
       <label className="form-label">
-        取得開始時間: <input className="form-input" type="text" value={dateRange.endDate} onChange={(e) => updateTime('endDate', e.target.value)} />
+        取得終了日: <input className="form-input" type="text" value={dateRange.endDate} onChange={(e) => updateTime('endDate', e.target.value)} />
       </label>
       <label className="form-label">
         取得終了時間: <input className="form-input" type="text" value={dateRange.endTime} onChange={(e) => updateTime('endTime', e.target.value)} />
@@ -187,8 +253,10 @@ function WeatherPage() {
 
       </form>
 
-      <button class="city-button"　onClick={fetchData}>Get Weather</button>
-      <button class="city-button" onClick={() => window.open('http://localhost:5000/download_csv')}>Download CSV</button>
+      <button class="city-button" onClick={fetchData}>Get Weather</button>
+      <button class="button" onClick={() => window.open('http://127.0.0.1:5000/download_csv')}>Download CSV</button>
+
+
 
       <div style={{ maxWidth: '100%' }}>
       <img src={`${serverUrl}/get_image?timestamp=${timestamp}`} alt="Generated Plot" style={{ maxWidth: '100%', height: 'auto' }}/>

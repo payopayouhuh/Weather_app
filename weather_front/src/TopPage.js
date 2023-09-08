@@ -1,15 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import './TopPage.css'; 
 
 const TopPage = () => {
   return (
-    <div>
-      <h2>Welcome to My Weather App</h2>
-      <Link to="/weather">
-        <button>Go to Weather Page</button>
+    <div className="container2">
+      <Link to="/weather" className="button-link"> 
+        <button className="button2">気象情報取得ページ</button>
       </Link>
     </div>
   );
 };
+
 
 export default TopPage;

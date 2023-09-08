@@ -24,7 +24,7 @@ const Header = () => {
           <span role="img" aria-label="home-icon">🏠</span>
         </AppIcon>
       </Link>
-      <h1>My Weather App</h1>
+      <h1>Weather App</h1>
     </HeaderContainer>
   );
 };

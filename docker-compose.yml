@@ -1,0 +1,19 @@
+version: '3'
+services:
+  react_app:
+    build: ./weather_front
+    ports:
+      - "3000:3000"
+    networks:
+      - mynetwork
+  
+  flask_app:
+    build: ./weather_backend
+    ports:
+      - "5000:5000"
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
+    driver: bridge

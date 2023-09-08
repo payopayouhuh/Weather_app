@@ -26,6 +26,15 @@
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
+.button {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border: none;
+  background-color: #7bff00;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
 
 .city-button:hover {
   background-color: #0056b3;
